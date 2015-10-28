@@ -89,6 +89,7 @@ target/
 *.ipr
 *.iws
 
+/examples
 ## Plugin-specific files:
 
 # IntelliJ
