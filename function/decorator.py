@@ -4,7 +4,7 @@
 import datetime
 import functools
 import time
-import timeit
+from decorator import decorator
 
 current = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 DEBUG = 'debug'
@@ -14,8 +14,8 @@ def log0(func):
     def wrapper(*args, **kwargs):
         print current, ": call %s()" % func.__name__
         print (args, kwargs)
-        return func(*args, **kwargs)
-        # func(*args, **kwargs)
+        func(*args, **kwargs)
+        # return func(*args, **kwargs)
 
     return wrapper
 
@@ -24,7 +24,8 @@ def log1(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         print current, "call %s()" % func.__name__
-        return func(*args, **kwargs)
+        func(*args, **kwargs)
+        # return func(*args, **kwargs)
 
     return wrapper
 
@@ -67,8 +68,20 @@ def timed(func):
         func(*args, **kwargs)
         end = time.clock()
         print 'used:', end - start
+        # return func(*args, **kwargs)
 
     return wrapper
+
+
+@decorator
+def timed2(func, *args, **kwargs):
+        print "timed"
+        start = time.clock()
+        func(*args, **kwargs)
+        end = time.clock()
+        print 'used:', end - start
+        return func(*args, **kwargs)
+
 
 
 log = Log()
@@ -85,7 +98,7 @@ def add2(a, b):
 
 
 @log1
-@timed
+@timed2
 def multiply(numbers):
     """
     Multiple decorators
